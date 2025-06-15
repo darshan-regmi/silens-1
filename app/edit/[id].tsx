@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ArrowLeft, Save, X } from 'lucide-react-native';
-import { createNoteInNotion, type PoemNote } from '@/utils/storage';
+import { createNoteInNotion, updateNoteInNotion, type PoemNote } from '@/utils/storage';
 
 export default function EditPoemScreen() {
   const params = useLocalSearchParams();
@@ -40,38 +40,45 @@ export default function EditPoemScreen() {
   }, [title, content, originalTitle, originalContent]);
 
   const handleSave = async () => {
-    if (!title.trim() && !content.trim()) {
-      Alert.alert('Empty Poem', 'Please add some content before saving.');
-      return;
+  if (!title.trim() && !content.trim()) {
+    Alert.alert('Empty Poem', 'Please add some content before saving.');
+    return;
+  }
+
+  setIsSaving(true);
+
+  const poemData: PoemNote = {
+  id: params.id as string,
+  title: title.trim() || 'Untitled Poem',
+  content: content.trim(),
+  status: 'Published',
+  createdAt: Array.isArray(params.createdAt)
+    ? params.createdAt[0]
+    : params.createdAt || new Date().toISOString(),
+  updatedAt: new Date().toISOString(),
+};
+
+  try {
+    if (params.id) {
+      console.log('✏️ Updating poem:', poemData.id);
+      const updated = await updateNoteInNotion(poemData);
+      if (!updated) throw new Error('Update failed');
+    } else {
+      console.log('🆕 Creating new poem');
+      const created = await createNoteInNotion(poemData);
+      if (!created) throw new Error('Creation failed');
     }
 
-    setIsSaving(true);
-    try {
-      const updatedPoem: PoemNote = {
-        id: params.id as string,
-        title: title.trim() || 'Untitled Poem',
-        content: content.trim(),
-        status: 'writing',
-        createdAt: params.createdAt as string,
-        updatedAt: new Date().toISOString(),
-      };
-
-      await createNoteInNotion(updatedPoem);
-
-      Alert.alert('Saved', 'Your poem has been updated successfully.', [
-        {
-          text: 'OK',
-          onPress: () => {
-            router.back();
-          },
-        },
-      ]);
-    } catch (error) {
-      Alert.alert('Error', 'Failed to save your poem. Please try again.');
-    } finally {
-      setIsSaving(false);
-    }
-  };
+    Alert.alert('Saved', 'Your poem has been saved successfully.', [
+      { text: 'OK', onPress: () => router.back() },
+    ]);
+  } catch (error) {
+    console.error('❌ handleSave error:', error);
+    Alert.alert('Error', 'Failed to save your poem. Please try again.');
+  } finally {
+    setIsSaving(false);
+  }
+};
 
   const handleCancel = () => {
     if (hasUnsavedChanges) {
@@ -86,7 +93,7 @@ export default function EditPoemScreen() {
           {
             text: 'Discard',
             style: 'destructive',
-            onPress: () => router.back(),
+            onPress: () => router.back(), 
           },
         ]
       );

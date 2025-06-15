@@ -11,7 +11,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { ArrowLeft, Share2, Heart, BookOpen, Calendar, Clock, Edit3 } from 'lucide-react-native';
+import { ArrowLeft, Share2, BookOpen, Calendar, Clock, Edit3 } from 'lucide-react-native';
 import { type PoemNote } from '@/utils/storage';
 
 const { width: screenWidth } = Dimensions.get('window');
@@ -25,7 +25,7 @@ export default function PoemDetailScreen() {
     id: params.id as string,
     title: params.title as string,
     content: params.content as string,
-    status: params.status as 'writing' | 'not published' | 'published',
+    status: params.status as 'writing' | 'not published' | 'Published',
     createdAt: params.createdAt as string,
     updatedAt: params.updatedAt as string,
   };
@@ -116,19 +116,6 @@ export default function PoemDetailScreen() {
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           >
             <Edit3 size={24} color="#8B5A3C" strokeWidth={1.5} />
-          </TouchableOpacity>
-          
-          <TouchableOpacity 
-            style={styles.actionButton} 
-            onPress={handleFavorite}
-            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-          >
-            <Heart 
-              size={24} 
-              color={isFavorited ? "#FF6B6B" : "#8B5A3C"} 
-              fill={isFavorited ? "#FF6B6B" : "none"}
-              strokeWidth={1.5} 
-            />
           </TouchableOpacity>
           
           <TouchableOpacity 
