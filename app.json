@@ -9,7 +9,11 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.darshanregmi.silens",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "web": {
       "bundler": "metro",
@@ -23,6 +27,15 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "626a0b7e-9ded-44f8-8bc4-ebf23b04e20e"
+      }
+    },
+    "android": {
+      "package": "com.darshan_regmi.silens"
     }
   }
 }
