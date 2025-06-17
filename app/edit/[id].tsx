@@ -179,6 +179,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
+    marginTop: Platform.select({
+      android: 16,
+      ios: 0,
+    }),
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

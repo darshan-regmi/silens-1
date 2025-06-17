@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
@@ -175,6 +176,10 @@ const styles = StyleSheet.create({
     color: '#A0A0A0',
   },
   header: {
+    marginTop: Platform.select({
+      android: 16,
+      ios: 0,
+    }),
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
